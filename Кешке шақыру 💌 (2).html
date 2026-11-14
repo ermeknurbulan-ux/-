@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Кешке шақыру 💌</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#ffe3ec;--bg2:#e9dcff;--card:rgba(255,255,255,.78);--ink:#4a1d3a;--muted:#8a5a78;--acc:#e8457c;--acc2:#b983ff;--gold:#c98a2b;--line:rgba(232,69,124,.25);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#2b0f33;--bg2:#101535;--card:rgba(255,255,255,.08);--ink:#fff0f6;--muted:#d9b6cf;--acc:#ff7aa8;--acc2:#b99cff;--gold:#ffd9a0;--line:rgba(255,160,200,.3)}}
+:root[data-theme="dark"]{--bg1:#2b0f33;--bg2:#101535;--card:rgba(255,255,255,.08);--ink:#fff0f6;--muted:#d9b6cf;--acc:#ff7aa8;--acc2:#b99cff;--gold:#ffd9a0;--line:rgba(255,160,200,.3)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:linear-gradient(160deg,var(--bg1),var(--bg2));color:var(--ink);font-family:"Nunito","Trebuchet MS",system-ui,sans-serif;display:flex;padding:16px;overflow-x:hidden;overflow-y:auto}
+.fl{position:fixed;top:-40px;pointer-events:none;opacity:.7;animation:fall linear infinite;z-index:0}
+@keyframes fall{to{transform:translateY(115vh) rotate(40deg)}}
+@media (prefers-reduced-motion:reduce){.fl{display:none}}
+.card{position:relative;z-index:1;margin:auto;width:100%;max-width:400px;min-height:430px;padding:28px 22px 26px;text-align:center;background:var(--card);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1.5px solid var(--line);border-radius:32px;display:flex;flex-direction:column;justify-content:center}
+.dots{display:flex;gap:7px;justify-content:center;margin-bottom:22px}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--line);transition:.3s}
+.dots i.on{background:var(--acc);width:22px;border-radius:6px}
+.emoji{font-size:58px;line-height:1.1;margin-bottom:10px}
+h1{font-family:"Cormorant Garamond",Georgia,serif;font-size:34px;line-height:1.15;margin:0 0 10px;font-weight:700}
+p{color:var(--muted);font-size:17px;line-height:1.55;margin:0 0 22px}
+.row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;min-height:56px}
+button{font:inherit;font-weight:800;font-size:18px;border:0;border-radius:18px;padding:14px 28px;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 8px 20px -8px var(--acc);touch-action:manipulation}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+button.no{background:transparent;color:var(--muted);border:2px solid var(--line);box-shadow:none}
+button.yes{transition:transform .2s}
+.hint{min-height:22px;margin-top:14px;font-size:15px;color:var(--acc);font-weight:800}
+.place{margin:0 0 22px;padding:14px;border-radius:20px;border:1.5px dashed var(--line);font-weight:800;line-height:1.6;font-size:18px}
+.sum{margin:0 0 18px;padding:16px;border-radius:20px;border:1.5px solid var(--line);font-weight:800;line-height:1.9;font-size:18px;text-align:left}
+.screen{display:none}
+.screen.on{display:block}
+.send{display:inline-block;margin-top:18px;padding:14px 28px;border-radius:18px;font-weight:800;font-size:18px;color:#fff;text-decoration:none;background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 8px 20px -8px var(--acc)}
+.send:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.big{font-family:"Cormorant Garamond",Georgia,serif;font-size:30px;font-weight:700;color:var(--acc);margin:0 0 6px}
+@media (prefers-reduced-motion:no-preference){.screen.on{animation:pop .4s ease}@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="dots" id="dots"></div>
+
+  <div class="screen on">
+    <div class="emoji">👋🏻✨</div>
+    <h1>Сәлем 👋🏻</h1>
+    <p>Қалың қалай? 💭</p>
+    <div class="row"><button data-go="1">Жақсы 😊</button><button data-go="1">Норм 🙂</button></div>
+  </div>
+
+  <div class="screen">
+    <div class="emoji">🌹💫</div>
+    <h1>Сені керемет бір кешке шақырамын 💖</h1>
+    <p>Келесің бе? 🥺</p>
+    <div class="row"><button class="yes" id="yes">Иә 💞</button><button class="no" id="no">Әрине жоқ 🙈</button></div>
+    <div class="hint" id="hint"></div>
+  </div>
+
+  <div class="screen">
+    <div class="emoji">⛸️❄️</div>
+    <h1>Кешкі каток 🌙</h1>
+    <div class="place">📍 Алау мұз айдыны<br>📅 Суббота, 14 ноябрь</div>
+    <div class="row"><button data-go="3">Керемет 😍</button></div>
+  </div>
+
+  <div class="screen">
+    <div class="emoji">🕖💗</div>
+    <h1>Сеанс 19:00 саған ыңғайлы ма? 🕖</h1>
+    <p>Сеанс 🎟️</p>
+    <div class="row"><button class="time" data-t="19:00">🌆 Иә, 19:00 💞</button></div>
+  </div>
+
+  <div class="screen">
+    <div class="emoji">🧣🧤☃️</div>
+    <h1>Жылы киініп шық, тоңып қалма 🥶➡️🥰</h1>
+    <p>Сені күтемін 💕</p>
+    <div class="row"><button data-go="5">Жарайды 🤍</button></div>
+  </div>
+
+  <div class="screen">
+    <div class="emoji">🍽️🕯️🍷</div>
+    <h1 id="h5">Ары қарай тамақтанамыз 😋</h1><p id="p5" style="display:none"></p>
+    <div class="place">📍 Ханшатыр</div>
+    <div class="row"><button data-go="6">Қуаныштымын 💝</button></div>
+  </div>
+
+  <div class="screen">
+    <div class="emoji">💌🌹✨</div>
+    <h1>Кездескенше 💞</h1>
+    <div class="sum" id="sum"></div>
+    <div class="big">Кездескенде 🥰</div>
+    <a class="send" id="send" href="#" target="_blank" rel="noopener">Жауабын жіберу 💌</a>
+  </div>
+</div>
+
+<script>
+var screens=[].slice.call(document.querySelectorAll('.screen')),dots=document.getElementById('dots');
+screens.forEach(function(){dots.appendChild(document.createElement('i'))});
+function show(i){screens.forEach(function(e,k){e.classList.toggle('on',k===i)});[].forEach.call(dots.children,function(d,k){d.classList.toggle('on',k===i)})}
+show(0);
+[].forEach.call(document.querySelectorAll('[data-go]'),function(b){b.onclick=function(){show(+b.getAttribute('data-go'))}});
+[].forEach.call(document.querySelectorAll('.time'),function(b){b.onclick=function(){plan(b.getAttribute('data-t'));show(4)}});
+
+var yes=document.getElementById('yes'),no=document.getElementById('no'),hint=document.getElementById('hint');
+function plan(t){
+  document.getElementById('send').href='https://t.me/MGNE4079?text='+encodeURIComponent('Келістім 💞 Суббота, 14 ноябрь, сеанс '+t);
+  var late=(t==='21:30'),h5=document.getElementById('h5'),p5=document.getElementById('p5');
+  var rice='🍽️ Ханшатыр',rink='⛸️ Алау мұз айдыны',date='📅 Суббота, 14 ноябрь',ses='🕖 Сеанс '+t;
+  if(late){
+    h5.textContent='Алдымен тамақтанамыз 😋';
+    p5.textContent='Каток кеш болады, сондықтан алдымен тамақтанып аламыз, сосын мұзға шығамыз ⛸️💫';
+    p5.style.display='block';
+    document.getElementById('sum').innerHTML=date+'<br>'+rice+' (алдымен)<br>'+rink+'<br>'+ses;
+  }else{
+    h5.textContent='Ары қарай тамақтанамыз 😋';
+    p5.style.display='none';
+    document.getElementById('sum').innerHTML=rink+'<br>'+date+'<br>'+ses+'<br>'+rice;
+  }
+}
+var tries=0,msgs=['Қате батырма 😏','Ұстап көр 😄','Тағы бір рет? 😅','Иә деп бас 💖'];
+yes.onclick=function(){show(2)};
+function run(e){
+  if(e&&e.preventDefault)e.preventDefault();
+  var c=document.querySelector('.card').getBoundingClientRect();
+  no.style.position='absolute';
+  no.style.left=(Math.random()*(c.width-no.offsetWidth-20)+10)+'px';
+  no.style.top=(Math.random()*(c.height-no.offsetHeight-20)+10)+'px';
+  hint.textContent=msgs[Math.min(tries,msgs.length-1)];
+  tries++;
+  yes.style.transform='scale('+Math.min(1+tries*0.07,1.4)+')';
+}
+no.addEventListener('mouseenter',run);
+no.addEventListener('touchstart',run,{passive:false});
+no.addEventListener('click',run);
+
+var em=['❄️','💖','✨','🌸','💗','⛸️'];
+for(var i=0;i<16;i++){var f=document.createElement('div');f.className='fl';f.textContent=em[i%em.length];
+f.style.left=(Math.random()*100)+'vw';f.style.fontSize=(14+Math.random()*16)+'px';
+f.style.animationDuration=(9+Math.random()*10)+'s';f.style.animationDelay=(-Math.random()*15)+'s';document.body.appendChild(f)}
+</script>
+</body>
+</html>
